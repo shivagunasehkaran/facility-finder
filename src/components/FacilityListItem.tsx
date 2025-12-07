@@ -5,7 +5,7 @@ import { colors, spacing, fontSize, touchTarget } from "../constants/theme";
 
 interface FacilityListItemProps {
   facility: Facility;
-  onPress: () => void;
+  onPress: (facility: Facility) => void;
 }
 
 export const FacilityListItem = memo<FacilityListItemProps>(
@@ -13,7 +13,7 @@ export const FacilityListItem = memo<FacilityListItemProps>(
     return (
       <TouchableOpacity
         style={styles.container}
-        onPress={onPress}
+        onPress={() => onPress(facility)}
         activeOpacity={0.7}
       >
         <View style={styles.content}>

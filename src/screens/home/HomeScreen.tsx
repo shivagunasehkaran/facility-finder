@@ -30,17 +30,18 @@ export default function HomeScreen() {
 
   const renderItem = useCallback(
     ({ item }: { item: Facility }) => (
-      <FacilityListItem
-        facility={item}
-        onPress={() => handleFacilityPress(item)}
-      />
+      <FacilityListItem facility={item} onPress={handleFacilityPress} />
     ),
     [handleFacilityPress]
   );
 
   const keyExtractor = useCallback((item: Facility) => item.id, []);
 
-  const estimatedItemSize = 80;
+  // Calculate estimated item size for FlashList performance
+  // Item height = padding (16*2) + name text (18) + margin (4) + address text (14*1.4*2 lines) + border (~1)
+  // = 32 + 18 + 4 + 39 + 1 = ~94px
+  // Using 90px as a safe estimate (slightly lower for better performance)
+  const estimatedItemSize = 90;
 
   if (state.isLoading) {
     return <LoadingState message={strings.loadingFacilities} />;
@@ -78,7 +79,13 @@ export default function HomeScreen() {
           data={state.filteredFacilities}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
+          // @ts-ignore - FlashList type definitions may be outdated, but this prop works at runtime
           estimatedItemSize={estimatedItemSize}
+          estimatedListSize={{
+            height: estimatedItemSize * state.filteredFacilities.length,
+            width: 0, // Will be calculated by FlashList
+          }}
+          drawDistance={estimatedItemSize * 2} // Render 2 screen heights worth of items
           contentContainerStyle={styles.listContent}
         />
       )}
