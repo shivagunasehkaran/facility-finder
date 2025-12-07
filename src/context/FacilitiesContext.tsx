@@ -5,6 +5,7 @@ import React, {
   useEffect,
   ReactNode,
   Dispatch,
+  useCallback,
 } from "react";
 import { Facility } from "../types/facility.types";
 import { filterFacilities } from "../utils/facilityHelpers";
@@ -28,6 +29,7 @@ type FacilitiesAction =
 interface FacilitiesContextType {
   state: FacilitiesState;
   dispatch: Dispatch<FacilitiesAction>;
+  retry: () => void;
 }
 
 const initialState: FacilitiesState = {
@@ -87,26 +89,28 @@ interface FacilitiesProviderProps {
 export function FacilitiesProvider({ children }: FacilitiesProviderProps) {
   const [state, dispatch] = useReducer(facilitiesReducer, initialState);
 
-  useEffect(() => {
-    async function fetchFacilities() {
-      try {
-        dispatch({ type: "SET_LOADING", payload: true });
-        dispatch({ type: "SET_ERROR", payload: null });
+  const fetchFacilities = useCallback(async () => {
+    try {
+      dispatch({ type: "SET_LOADING", payload: true });
+      dispatch({ type: "SET_ERROR", payload: null });
 
-        const facilities = await loadFacilities();
-        dispatch({ type: "SET_FACILITIES", payload: facilities });
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : strings.error.loadFacilities;
-        dispatch({ type: "SET_ERROR", payload: errorMessage });
-      }
+      const facilities = await loadFacilities();
+      dispatch({ type: "SET_FACILITIES", payload: facilities });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : strings.error.loadFacilities;
+      dispatch({ type: "SET_ERROR", payload: errorMessage });
     }
-
-    fetchFacilities();
   }, []);
 
+  useEffect(() => {
+    fetchFacilities();
+  }, [fetchFacilities]);
+
   return (
-    <FacilitiesContext.Provider value={{ state, dispatch }}>
+    <FacilitiesContext.Provider
+      value={{ state, dispatch, retry: fetchFacilities }}
+    >
       {children}
     </FacilitiesContext.Provider>
   );

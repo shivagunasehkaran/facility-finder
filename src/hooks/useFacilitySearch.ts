@@ -6,7 +6,7 @@ import { useFacilities } from "../context/FacilitiesContext";
  * Custom hook to manage facility search functionality
  * Handles local search state, debouncing, and syncing with context
  * @param debounceDelay - Delay in milliseconds for debouncing (default: 300)
- * @returns Object containing searchQuery, setSearchQuery, and debouncedSearchQuery
+ * @returns Object containing searchQuery and setSearchQuery
  */
 export function useFacilitySearch(debounceDelay: number = 300) {
   const { state, dispatch } = useFacilities();
@@ -21,6 +21,5 @@ export function useFacilitySearch(debounceDelay: number = 300) {
   return {
     searchQuery,
     setSearchQuery,
-    debouncedSearchQuery,
   };
 }

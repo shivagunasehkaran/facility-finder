@@ -46,7 +46,3 @@ export const strings = {
     providerError: "useFacilities must be used within a FacilitiesProvider",
   },
 } as const;
-
-// Type-safe string access
-export type Strings = typeof strings;
-

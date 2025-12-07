@@ -11,9 +11,8 @@ export function parseAddress(address: string): {
   postcode: string;
 } {
   const parts = address.split(',').map((part) => part.trim());
-  
+
   if (parts.length < 3) {
-    // Fallback if format is unexpected
     return {
       suburb: parts[1] || '',
       state: '',
@@ -23,10 +22,10 @@ export function parseAddress(address: string): {
 
   const suburb = parts[1] || '';
   const statePostcode = parts[2] || '';
-  
+
   // Extract state and postcode (format: "NSW 2000" or "VIC 3000")
   const statePostcodeMatch = statePostcode.match(/^([A-Z]{2,3})\s+(\d{4})$/);
-  
+
   if (statePostcodeMatch) {
     return {
       suburb,
@@ -35,7 +34,7 @@ export function parseAddress(address: string): {
     };
   }
 
-  // Fallback if regex doesn't match
+  // Fallback: split on last space if regex doesn't match
   const spaceIndex = statePostcode.lastIndexOf(' ');
   if (spaceIndex > 0) {
     return {

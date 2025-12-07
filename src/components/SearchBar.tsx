@@ -42,6 +42,7 @@ export function SearchBar({
           placeholderTextColor={colors.textSecondary}
           autoCapitalize="none"
           autoCorrect={false}
+          // Disable iOS native clear button since we have a custom one
           {...(Platform.OS === "ios" && { clearButtonMode: "never" })}
         />
         {value.length > 0 && (

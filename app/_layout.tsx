@@ -16,6 +16,7 @@ function StackNavigator() {
           fontWeight: "600",
           fontSize: fontSize.lg,
         },
+        // @ts-ignore - Valid prop but not in Expo Router types
         headerBackTitleVisible: false,
       }}
     >

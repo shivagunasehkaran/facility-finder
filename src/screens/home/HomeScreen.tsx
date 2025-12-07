@@ -15,7 +15,7 @@ import { SearchBar } from "@/components/SearchBar";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { state } = useFacilities();
+  const { state, retry } = useFacilities();
   const { searchQuery, setSearchQuery } = useFacilitySearch();
 
   const handleFacilityPress = useCallback(
@@ -37,10 +37,9 @@ export default function HomeScreen() {
 
   const keyExtractor = useCallback((item: Facility) => item.id, []);
 
-  // Calculate estimated item size for FlashList performance
-  // Item height = padding (16*2) + name text (18) + margin (4) + address text (14*1.4*2 lines) + border (~1)
-  // = 32 + 18 + 4 + 39 + 1 = ~94px
-  // Using 90px as a safe estimate (slightly lower for better performance)
+  // FlashList performance optimization: estimatedItemSize helps with virtualization
+  // Calculation: padding (32) + name (18) + margin (4) + address (39) + border (1) ≈ 94px
+  // Using 90px as a conservative estimate for better scroll performance
   const estimatedItemSize = 90;
 
   if (state.isLoading) {
@@ -49,7 +48,11 @@ export default function HomeScreen() {
 
   if (state.error) {
     return (
-      <ErrorState message={state.error} subtext={strings.error.checkDataFile} />
+      <ErrorState
+        message={state.error}
+        subtext={strings.error.checkDataFile}
+        onRetry={retry}
+      />
     );
   }
 
