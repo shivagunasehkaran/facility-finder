@@ -1,23 +1,21 @@
 import React from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams } from "expo-router";
 import { colors, spacing, borderRadius, fontSize } from "@/constants/theme";
-import { useFacilities } from "@/context/FacilitiesContext";
+import { useFacilityDetails } from "@/hooks/useFacilityDetails";
+import { EmptyState } from "@/components/EmptyState";
+import { DetailSection } from "@/components/DetailSection";
 
 export default function FacilityDetailsScreen() {
-  const { facilityId } = useLocalSearchParams<{ facilityId: string }>();
-  const { state } = useFacilities();
-
-  // Find facility by ID
-  const facility = state.allFacilities.find((f) => f.id === facilityId);
+  const facility = useFacilityDetails();
 
   if (!facility) {
     return (
       <SafeAreaView style={styles.container} edges={["bottom"]}>
-        <View style={styles.centerContainer}>
-          <Text style={styles.errorText}>Facility not found</Text>
-        </View>
+        <EmptyState
+          message="Facility not found"
+          subtext="The facility you're looking for doesn't exist."
+        />
       </SafeAreaView>
     );
   }
@@ -32,27 +30,21 @@ export default function FacilityDetailsScreen() {
         <View style={styles.card}>
           <Text style={styles.title}>{facility.name}</Text>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Address</Text>
-            <Text style={styles.sectionContent}>{facility.address}</Text>
-          </View>
+          <DetailSection title="Address" value={facility.address} />
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Location Details</Text>
-            <Text style={styles.sectionContent}>
-              {facility.suburb}, {facility.state} {facility.postcode}
-            </Text>
-          </View>
+          <DetailSection
+            title="Location Details"
+            value={`${facility.suburb}, ${facility.state} ${facility.postcode}`}
+          />
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Coordinates</Text>
-            <Text style={styles.sectionContent}>
-              {facility.latitude.toFixed(6)}, {facility.longitude.toFixed(6)}
-            </Text>
-          </View>
+          <DetailSection
+            title="Coordinates"
+            value={`${facility.latitude.toFixed(
+              6
+            )}, ${facility.longitude.toFixed(6)}`}
+          />
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Amenities</Text>
+          <DetailSection title="Amenities">
             {facility.facilities.length > 0 ? (
               <View style={styles.amenitiesContainer}>
                 {facility.facilities.map((amenity, index) => (
@@ -64,7 +56,7 @@ export default function FacilityDetailsScreen() {
             ) : (
               <Text style={styles.sectionContent}>No amenities listed</Text>
             )}
-          </View>
+          </DetailSection>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -82,12 +74,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: spacing.md,
   },
-  centerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: spacing.lg,
-  },
   card: {
     backgroundColor: colors.background,
     borderRadius: borderRadius.lg,
@@ -103,15 +89,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: colors.text,
     marginBottom: spacing.lg,
-  },
-  section: {
-    marginBottom: spacing.lg,
-  },
-  sectionTitle: {
-    fontSize: fontSize.md,
-    fontWeight: "600",
-    color: colors.text,
-    marginBottom: spacing.sm,
   },
   sectionContent: {
     fontSize: fontSize.md,
@@ -135,11 +112,5 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
     color: colors.text,
     fontWeight: "500",
-  },
-  errorText: {
-    fontSize: fontSize.lg,
-    fontWeight: "600",
-    color: colors.error,
-    textAlign: "center",
   },
 });
