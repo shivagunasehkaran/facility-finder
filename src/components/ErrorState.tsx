@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { colors, spacing, fontSize } from "../constants/theme";
+import { strings } from "../constants/strings";
 
 interface ErrorStateProps {
   message: string;
@@ -9,7 +10,7 @@ interface ErrorStateProps {
 
 export function ErrorState({
   message,
-  subtext = "Please try again later.",
+  subtext = strings.error.generic,
 }: ErrorStateProps) {
   return (
     <View style={styles.container}>
@@ -39,4 +40,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-

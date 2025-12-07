@@ -7,6 +7,7 @@ import { LoadingState } from "@/components/LoadingState";
 import { ErrorState } from "@/components/ErrorState";
 import { EmptyState } from "@/components/EmptyState";
 import { colors, spacing } from "@/constants/theme";
+import { strings } from "@/constants/strings";
 import { useFacilitySearch } from "@/hooks/useFacilitySearch";
 import { useFacilities } from "@/context/FacilitiesContext";
 import { Facility } from "@/types/facility.types";
@@ -42,23 +43,20 @@ export default function HomeScreen() {
   const estimatedItemSize = 80;
 
   if (state.isLoading) {
-    return <LoadingState message="Loading facilities..." />;
+    return <LoadingState message={strings.loadingFacilities} />;
   }
 
   if (state.error) {
     return (
-      <ErrorState
-        message={state.error}
-        subtext="Please check your data file and try again."
-      />
+      <ErrorState message={state.error} subtext={strings.error.checkDataFile} />
     );
   }
 
   if (state.allFacilities.length === 0) {
     return (
       <EmptyState
-        message="No facilities found"
-        subtext="Please check your data file."
+        message={strings.empty.noFacilities}
+        subtext={strings.empty.noFacilitiesSubtext}
       />
     );
   }
@@ -68,12 +66,12 @@ export default function HomeScreen() {
       <SearchBar
         value={searchQuery}
         onChangeText={setSearchQuery}
-        placeholder="Search by name, address, suburb..."
+        placeholder={strings.search.placeholderDetailed}
       />
       {state.filteredFacilities.length === 0 ? (
         <EmptyState
-          message="No results found"
-          subtext="Try adjusting your search query."
+          message={strings.empty.noResults}
+          subtext={strings.empty.noResultsSubtext}
         />
       ) : (
         <FlashList

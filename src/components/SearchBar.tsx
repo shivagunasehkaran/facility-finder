@@ -1,13 +1,14 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   TextInput,
   TouchableOpacity,
   StyleSheet,
   Platform,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { colors, spacing, fontSize, borderRadius } from '../constants/theme';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { colors, spacing, fontSize, borderRadius } from "../constants/theme";
+import { strings } from "../constants/strings";
 
 interface SearchBarProps {
   value: string;
@@ -18,10 +19,10 @@ interface SearchBarProps {
 export function SearchBar({
   value,
   onChangeText,
-  placeholder = 'Search facilities...',
+  placeholder = strings.search.placeholder,
 }: SearchBarProps) {
   const handleClear = () => {
-    onChangeText('');
+    onChangeText("");
   };
 
   return (
@@ -41,7 +42,7 @@ export function SearchBar({
           placeholderTextColor={colors.textSecondary}
           autoCapitalize="none"
           autoCorrect={false}
-          {...(Platform.OS === 'ios' && { clearButtonMode: 'never' })}
+          {...(Platform.OS === "ios" && { clearButtonMode: "never" })}
         />
         {value.length > 0 && (
           <TouchableOpacity
@@ -49,7 +50,11 @@ export function SearchBar({
             style={styles.clearButton}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Ionicons name="close-circle" size={20} color={colors.textSecondary} />
+            <Ionicons
+              name="close-circle"
+              size={20}
+              color={colors.textSecondary}
+            />
           </TouchableOpacity>
         )}
       </View>
@@ -66,15 +71,15 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.surface,
     borderRadius: borderRadius.md,
     paddingHorizontal: spacing.sm,
     height: 44,
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 2,
@@ -98,4 +103,3 @@ const styles = StyleSheet.create({
     padding: spacing.xs,
   },
 });
-

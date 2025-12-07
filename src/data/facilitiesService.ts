@@ -1,5 +1,6 @@
 import { RawFacility, Facility } from "../types/facility.types";
 import { transformFacility } from "../utils/facilityHelpers";
+import { strings } from "../constants/strings";
 
 /**
  * Loads facilities data from the JSON file
@@ -10,7 +11,7 @@ export async function loadFacilities(): Promise<Facility[]> {
   const rawFacilities: RawFacility[] = require("../../assets/facilities.json");
 
   if (!rawFacilities || rawFacilities.length === 0) {
-    throw new Error("Invalid facilities data format or empty array");
+    throw new Error(strings.error.invalidData);
   }
 
   return rawFacilities.map(transformFacility);

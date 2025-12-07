@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, borderRadius, fontSize } from "@/constants/theme";
+import { strings } from "@/constants/strings";
 import { useFacilityDetails } from "@/hooks/useFacilityDetails";
 import { EmptyState } from "@/components/EmptyState";
 import { DetailSection } from "@/components/DetailSection";
@@ -13,8 +14,8 @@ export default function FacilityDetailsScreen() {
     return (
       <SafeAreaView style={styles.container} edges={["bottom"]}>
         <EmptyState
-          message="Facility not found"
-          subtext="The facility you're looking for doesn't exist."
+          message={strings.error.facilityNotFound}
+          subtext={strings.error.facilityNotFoundSubtext}
         />
       </SafeAreaView>
     );
@@ -30,21 +31,24 @@ export default function FacilityDetailsScreen() {
         <View style={styles.card}>
           <Text style={styles.title}>{facility.name}</Text>
 
-          <DetailSection title="Address" value={facility.address} />
+          <DetailSection
+            title={strings.facilityDetails.address}
+            value={facility.address}
+          />
 
           <DetailSection
-            title="Location Details"
+            title={strings.facilityDetails.locationDetails}
             value={`${facility.suburb}, ${facility.state} ${facility.postcode}`}
           />
 
           <DetailSection
-            title="Coordinates"
+            title={strings.facilityDetails.coordinates}
             value={`${facility.latitude.toFixed(
               6
             )}, ${facility.longitude.toFixed(6)}`}
           />
 
-          <DetailSection title="Amenities">
+          <DetailSection title={strings.facilityDetails.amenities}>
             {facility.facilities.length > 0 ? (
               <View style={styles.amenitiesContainer}>
                 {facility.facilities.map((amenity, index) => (
@@ -54,7 +58,9 @@ export default function FacilityDetailsScreen() {
                 ))}
               </View>
             ) : (
-              <Text style={styles.sectionContent}>No amenities listed</Text>
+              <Text style={styles.sectionContent}>
+                {strings.empty.noAmenities}
+              </Text>
             )}
           </DetailSection>
         </View>

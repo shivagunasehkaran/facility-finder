@@ -9,6 +9,7 @@ import React, {
 import { Facility } from "../types/facility.types";
 import { filterFacilities } from "../utils/facilityHelpers";
 import { loadFacilities } from "../data/facilitiesService";
+import { strings } from "../constants/strings";
 
 interface FacilitiesState {
   allFacilities: Facility[];
@@ -93,11 +94,10 @@ export function FacilitiesProvider({ children }: FacilitiesProviderProps) {
         dispatch({ type: "SET_ERROR", payload: null });
 
         const facilities = await loadFacilities();
-        console.log("facilities -->>>", JSON.stringify(facilities));
         dispatch({ type: "SET_FACILITIES", payload: facilities });
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Failed to load facilities";
+          error instanceof Error ? error.message : strings.error.loadFacilities;
         dispatch({ type: "SET_ERROR", payload: errorMessage });
       }
     }
@@ -115,7 +115,7 @@ export function FacilitiesProvider({ children }: FacilitiesProviderProps) {
 export function useFacilities() {
   const context = useContext(FacilitiesContext);
   if (context === undefined) {
-    throw new Error("useFacilities must be used within a FacilitiesProvider");
+    throw new Error(strings.context.providerError);
   }
   return context;
 }
